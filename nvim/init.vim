@@ -20,8 +20,6 @@ set scrolloff=8
 set signcolumn=yes
 set colorcolumn=80
 
-set completeopt=menu,menuone,noselect
-
 call plug#begin('~/.vim/plugged')
 Plug 'nvim-lua/popup.nvim'
 Plug 'neovim/nvim-lspconfig'
@@ -50,5 +48,3 @@ nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
-
-set completeopt=menu,menuone,noselect

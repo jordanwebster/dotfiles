@@ -40,6 +40,13 @@ for _, lsp in pairs(servers) do
     flags = {
       -- This will be the default in neovim 0.7+
       debounce_text_changes = 150,
-    }
+    },
+    settings = {
+      ["rust-analyzer"] = {
+        checkOnSave = {
+          command = "clippy",
+        },
+      },
+    },
   }
 end

@@ -92,13 +92,13 @@
           "type" : "basic"
         } ]
       }, {
-        "description" : "backslash to hyper (cmd+ctrl+opt+shift when held, backslash when tapped)",
+        "description" : "enter to hyper (cmd+ctrl+opt+shift when held, enter when tapped)",
         "manipulators" : [ {
           "to_if_alone" : [ {
-            "key_code" : "backslash"
+            "key_code" : "return_or_enter"
           } ],
           "from" : {
-            "key_code" : "backslash",
+            "key_code" : "return_or_enter",
             "modifiers" : {
               "optional" : [ "any" ]
             }

@@ -1,0 +1,529 @@
+{
+  "profiles" : [ {
+    "complex_modifications" : {
+      "parameters" : {
+        "basic.simultaneous_threshold_milliseconds" : 50,
+        "basic.to_delayed_action_delay_milliseconds" : 500,
+        "basic.to_if_alone_timeout_milliseconds" : 1000,
+        "basic.to_if_held_down_threshold_milliseconds" : 500
+      },
+      "rules" : [ {
+        "description" : "Auto generated layer conditions",
+        "manipulators" : [ {
+          "type" : "basic",
+          "to" : [ {
+            "set_variable" : {
+              "name" : "symbols",
+              "value" : 1
+            }
+          } ],
+          "from" : {
+            "key_code" : "right_command"
+          },
+          "to_after_key_up" : [ {
+            "set_variable" : {
+              "name" : "symbols",
+              "value" : 0
+            }
+          } ],
+          "to_if_alone" : [ {
+            "key_code" : "right_command"
+          } ]
+        } ]
+      }, {
+        "description" : "caps_lock to esc when pressed alone, to command as modifier",
+        "manipulators" : [ {
+          "to_if_alone" : [ {
+            "key_code" : "escape"
+          } ],
+          "from" : {
+            "key_code" : "caps_lock",
+            "modifiers" : {
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "key_code" : "left_command"
+          } ],
+          "type" : "basic"
+        } ]
+      }, {
+        "description" : "left command to shift",
+        "manipulators" : [ {
+          "from" : {
+            "key_code" : "left_command"
+          },
+          "to" : [ {
+            "key_code" : "left_shift"
+          } ],
+          "type" : "basic"
+        } ]
+      }, {
+        "description" : "left shift to ctrl",
+        "manipulators" : [ {
+          "from" : {
+            "key_code" : "left_shift"
+          },
+          "to" : [ {
+            "key_code" : "left_control"
+          } ],
+          "type" : "basic"
+        } ]
+      }, {
+        "description" : "right shift to ctrl",
+        "manipulators" : [ {
+          "from" : {
+            "key_code" : "right_shift"
+          },
+          "to" : [ {
+            "key_code" : "right_control"
+          } ],
+          "type" : "basic"
+        } ]
+      }, {
+        "description" : "backspace",
+        "manipulators" : [ {
+          "from" : {
+            "key_code" : "open_bracket"
+          },
+          "to" : [ {
+            "key_code" : "delete_or_backspace"
+          } ],
+          "type" : "basic"
+        } ]
+      }, {
+        "description" : "backslash to hyper (cmd+ctrl+opt+shift when held, backslash when tapped)",
+        "manipulators" : [ {
+          "to_if_alone" : [ {
+            "key_code" : "backslash"
+          } ],
+          "from" : {
+            "key_code" : "backslash",
+            "modifiers" : {
+              "optional" : [ "any" ]
+            }
+          },
+          "to" : [ {
+            "modifiers" : [ "left_command", "left_control", "left_option" ],
+            "key_code" : "left_shift"
+          } ],
+          "type" : "basic"
+        } ]
+      }, {
+        "description" : "symbols layer",
+        "manipulators" : [ {
+          "from" : {
+            "key_code" : "j"
+          },
+          "to" : [ {
+            "modifiers" : [ "left_shift" ],
+            "key_code" : "hyphen"
+          } ],
+          "conditions" : [ {
+            "name" : "symbols",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "k"
+          },
+          "to" : [ {
+            "key_code" : "equal_sign"
+          } ],
+          "conditions" : [ {
+            "name" : "symbols",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "l"
+          },
+          "to" : [ {
+            "modifiers" : [ "left_shift" ],
+            "key_code" : "comma"
+          } ],
+          "conditions" : [ {
+            "name" : "symbols",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "semicolon"
+          },
+          "to" : [ {
+            "modifiers" : [ "left_shift" ],
+            "key_code" : "period"
+          } ],
+          "conditions" : [ {
+            "name" : "symbols",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "h"
+          },
+          "to" : [ {
+            "modifiers" : [ "left_shift" ],
+            "key_code" : "grave_accent_and_tilde"
+          } ],
+          "conditions" : [ {
+            "name" : "symbols",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "n"
+          },
+          "to" : [ {
+            "modifiers" : [ "left_option" ],
+            "key_code" : "3"
+          } ],
+          "conditions" : [ {
+            "name" : "symbols",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "m"
+          },
+          "to" : [ {
+            "modifiers" : [ "left_shift" ],
+            "key_code" : "slash"
+          } ],
+          "conditions" : [ {
+            "name" : "symbols",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "comma"
+          },
+          "to" : [ {
+            "key_code" : "comma"
+          } ],
+          "conditions" : [ {
+            "name" : "symbols",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "period"
+          },
+          "to" : [ {
+            "key_code" : "period"
+          } ],
+          "conditions" : [ {
+            "name" : "symbols",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "slash"
+          },
+          "to" : [ {
+            "key_code" : "slash"
+          } ],
+          "conditions" : [ {
+            "name" : "symbols",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "y"
+          },
+          "to" : [ {
+            "modifiers" : [ "left_shift" ],
+            "key_code" : "3"
+          } ],
+          "conditions" : [ {
+            "name" : "symbols",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "u"
+          },
+          "to" : [ {
+            "modifiers" : [ "left_shift" ],
+            "key_code" : "1"
+          } ],
+          "conditions" : [ {
+            "name" : "symbols",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "i"
+          },
+          "to" : [ {
+            "modifiers" : [ "left_shift" ],
+            "key_code" : "semicolon"
+          } ],
+          "conditions" : [ {
+            "name" : "symbols",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "o"
+          },
+          "to" : [ {
+            "key_code" : "semicolon"
+          } ],
+          "conditions" : [ {
+            "name" : "symbols",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "p"
+          },
+          "to" : [ {
+            "key_code" : "quote"
+          } ],
+          "conditions" : [ {
+            "name" : "symbols",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "a"
+          },
+          "to" : [ {
+            "modifiers" : [ "left_shift" ],
+            "key_code" : "backslash"
+          } ],
+          "conditions" : [ {
+            "name" : "symbols",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "s"
+          },
+          "to" : [ {
+            "modifiers" : [ "left_shift" ],
+            "key_code" : "7"
+          } ],
+          "conditions" : [ {
+            "name" : "symbols",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "d"
+          },
+          "to" : [ {
+            "modifiers" : [ "left_shift" ],
+            "key_code" : "open_bracket"
+          } ],
+          "conditions" : [ {
+            "name" : "symbols",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "f"
+          },
+          "to" : [ {
+            "modifiers" : [ "left_shift" ],
+            "key_code" : "9"
+          } ],
+          "conditions" : [ {
+            "name" : "symbols",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "g"
+          },
+          "to" : [ {
+            "key_code" : "open_bracket"
+          } ],
+          "conditions" : [ {
+            "name" : "symbols",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "v"
+          },
+          "to" : [ {
+            "modifiers" : [ "left_shift" ],
+            "key_code" : "0"
+          } ],
+          "conditions" : [ {
+            "name" : "symbols",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "b"
+          },
+          "to" : [ {
+            "key_code" : "close_bracket"
+          } ],
+          "conditions" : [ {
+            "name" : "symbols",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "c"
+          },
+          "to" : [ {
+            "modifiers" : [ "left_shift" ],
+            "key_code" : "close_bracket"
+          } ],
+          "conditions" : [ {
+            "name" : "symbols",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "x"
+          },
+          "to" : [ {
+            "modifiers" : [ "left_shift" ],
+            "key_code" : "5"
+          } ],
+          "conditions" : [ {
+            "name" : "symbols",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "z"
+          },
+          "to" : [ {
+            "key_code" : "backslash"
+          } ],
+          "conditions" : [ {
+            "name" : "symbols",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "w"
+          },
+          "to" : [ {
+            "key_code" : "hyphen"
+          } ],
+          "conditions" : [ {
+            "name" : "symbols",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "e"
+          },
+          "to" : [ {
+            "modifiers" : [ "left_shift" ],
+            "key_code" : "equal_sign"
+          } ],
+          "conditions" : [ {
+            "name" : "symbols",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "r"
+          },
+          "to" : [ {
+            "modifiers" : [ "left_shift" ],
+            "key_code" : "8"
+          } ],
+          "conditions" : [ {
+            "name" : "symbols",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        }, {
+          "from" : {
+            "key_code" : "t"
+          },
+          "to" : [ {
+            "modifiers" : [ "left_shift" ],
+            "key_code" : "4"
+          } ],
+          "conditions" : [ {
+            "name" : "symbols",
+            "value" : 1,
+            "type" : "variable_if"
+          } ],
+          "type" : "basic"
+        } ]
+      } ]
+    },
+    "devices" : [ {
+      "identifiers" : {
+        "is_keyboard" : true,
+        "is_pointing_device" : true,
+        "product_id" : 854,
+        "vendor_id" : 1241
+      },
+      "ignore" : false
+    } ],
+    "name" : "Default",
+    "selected" : true,
+    "virtual_hid_keyboard" : {
+      "country_code" : 0,
+      "keyboard_type_v2" : "ansi"
+    }
+  } ]
+}

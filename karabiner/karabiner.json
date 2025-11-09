@@ -81,17 +81,6 @@
           "type" : "basic"
         } ]
       }, {
-        "description" : "backspace",
-        "manipulators" : [ {
-          "from" : {
-            "key_code" : "open_bracket"
-          },
-          "to" : [ {
-            "key_code" : "delete_or_backspace"
-          } ],
-          "type" : "basic"
-        } ]
-      }, {
         "description" : "backslash to hyper (cmd+ctrl+opt+shift when held, backslash when tapped)",
         "manipulators" : [ {
           "to_if_alone" : [ {

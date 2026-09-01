@@ -19,6 +19,19 @@ vim.lsp.config('ty', {
   root_markers = { 'pyproject.toml', 'setup.py', 'ruff.toml', '.git' },
 })
 
+-- Python linting, as a second server alongside ty.
+--
+-- ty type-checks; it does not run lint rules, which is the thing ruff is
+-- actually famous for. Without this, unused imports, unsorted imports and
+-- dead locals go unreported in the editor even though ruff is installed and
+-- formatting with it on save. Two servers on one filetype is the intended
+-- arrangement here: ty answers for types, ruff for lints and their fixes.
+vim.lsp.config('ruff', {
+  cmd = { 'ruff', 'server' },
+  filetypes = { 'python' },
+  root_markers = { 'pyproject.toml', 'ruff.toml', '.ruff.toml', '.git' },
+})
+
 -- TypeScript and JavaScript, via the native Go port's own server.
 --
 -- TypeScript 7 ships only `tsc` in the `typescript` package -- there is no
@@ -48,7 +61,7 @@ vim.lsp.config('lua_ls', {
 -- rust_analyzer and gopls take nvim-lspconfig's definitions as they ship.
 -- C# is not here: roslyn.nvim (plugins/roslyn.lua) has to locate and pick a
 -- solution before the server can attach, which vim.lsp.enable() cannot do.
-vim.lsp.enable({ 'ty', 'tsgo', 'lua_ls', 'rust_analyzer', 'gopls' })
+vim.lsp.enable({ 'ty', 'ruff', 'tsgo', 'lua_ls', 'rust_analyzer', 'gopls' })
 
 -- Built-in completion, driven by the language server. Replaces nvim-cmp and
 -- cmp-nvim-lsp; 'autocomplete' in config/options.lua is the other half.
@@ -56,6 +69,13 @@ vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('dotfiles-lsp', { clear = true }),
   callback = function(ev)
     vim.lsp.completion.enable(true, ev.data.client_id, ev.buf, { autotrigger = true })
+
+    -- ruff also advertises hover, which would make every Python hover show
+    -- two popups. ty is the one that knows about types, so it wins.
+    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    if client and client.name == 'ruff' then
+      client.server_capabilities.hoverProvider = false
+    end
   end,
 })
 

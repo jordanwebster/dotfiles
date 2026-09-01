@@ -1,6 +1,6 @@
 # Neovim
 
-Requires **Nvim 0.12+**. Eight plugins, managed by `vim.pack` (built in).
+Requires **Nvim 0.12+**. Ten plugins, managed by `vim.pack` (built in).
 
 ```
 init.lua              plugin list, leader, treesitter update hook
@@ -51,14 +51,28 @@ an/in  (visual) grow/shrink treesitter selection
 gd            go to definition        <leader>ff  find files
 gD            go to declaration       <leader>fg  grep (live, ripgrep)
                                       <leader>fb  buffers
-]c [c         next/prev git hunk      <leader>fh  help tags
-<leader>gp    preview hunk            <leader>fw  grep word under cursor
-<leader>gb    blame line              <leader>fr  resume last picker
-<leader>gd    diff this file          <leader>fd  diagnostics
-                                      <leader>fs  symbols (this file)
-<Esc><Esc>    leave terminal mode     <leader>fS  symbols (workspace)
-                                      <leader>ft  find types (workspace)
+-             files, at current file  <leader>fh  help tags
+<leader>-     files, at cwd           <leader>fw  grep word under cursor
+                                      <leader>fr  resume last picker
+]c [c         next/prev git hunk      <leader>fd  diagnostics
+<leader>gp    preview hunk            <leader>fs  symbols (this file)
+<leader>gb    blame line              <leader>fS  symbols (workspace)
+<leader>gd    diff this file          <leader>ft  find types (workspace)
+
+<leader>gs    git status (files)      <Esc><Esc>  leave terminal mode
+<leader>gh    git hunks (changeset)
+<leader>gc    git commits (repo)
+<leader>gf    git commits (this file)
 ```
+
+The `<leader>g` maps split by scope: `gp`/`gb`/`gd` are gitsigns, buffer-local,
+answering "what changed *here*"; `gs`/`gh`/`gc`/`gf` are fzf-lua pickers over
+the whole repo. `git_hunks` puts every hunk in the working tree into one
+fuzzy-searchable list, which is the fastest way to review a change someone
+else — or something else — wrote.
+
+`-` shadows the builtin `-` motion (first non-blank of the previous line), the
+same trade vim-vinegar and oil.nvim make for the key that best means "up".
 
 `gd` is the only LSP default overridden: Vim's builtin `gd` only searches the
 current function. Bare `gr` is deliberately left unmapped — taking it would
@@ -133,5 +147,13 @@ terminal for free. All three backgrounds are identical, not similar.
 :restart                  reload after updating
 ```
 
-Nothing is lazy-loaded. At eight plugins the startup cost is not worth the
+Nothing is lazy-loaded. At ten plugins the startup cost is not worth the
 indirection.
+
+`plenary.nvim` is present only because yazi.nvim depends on it. lazy.nvim
+installs a plugin's declared dependencies for you; `vim.pack` does not, so
+transitive dependencies are listed explicitly in `init.lua`.
+
+There is no diff-review plugin. diffview.nvim is the obvious candidate and
+does work on 0.12 — but it has had no commits since June 2024, and the
+fzf-lua git pickers above cover the same question without adding anything.

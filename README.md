@@ -43,7 +43,7 @@ control, a hyper key, and a symbol layer on the home row. Written in goku's
 edn format rather than Karabiner's generated JSON. See
 [karabiner/README.md](karabiner/README.md).
 
-**nvim** — editor config. Eight plugins on Nvim 0.12's built-in plugin
+**nvim** — editor config. Ten plugins on Nvim 0.12's built-in plugin
 manager and completion, leaning on core's default keymaps rather than
 redefining them. See [nvim/README.md](nvim/README.md).
 
@@ -53,7 +53,7 @@ used to provide are inlined, so a fresh machine needs no plugin manager.
 ## Requirements
 
 ```sh
-brew install goku tmux neovim
+brew install goku tmux neovim yazi
 brew install --cask ghostty
 ./install.sh --tools  # fzf, ripgrep, fd, tree-sitter, language servers, formatters
 ```

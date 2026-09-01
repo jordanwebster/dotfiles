@@ -47,6 +47,11 @@ vim.pack.add({
   'https://github.com/folke/which-key.nvim',
   'https://github.com/seblyng/roslyn.nvim',
   'https://github.com/olimorris/onedarkpro.nvim',
+
+  -- yazi.nvim, and the one dependency it declares. lazy.nvim would install
+  -- that transitively; vim.pack does not, so it is listed explicitly.
+  'https://github.com/nvim-lua/plenary.nvim',
+  'https://github.com/mikavilpas/yazi.nvim',
 }, {
   -- Running install.sh, or starting Nvim after editing this list, is already
   -- the intent to install. A prompt here only blocks the first start on a new
@@ -66,3 +71,4 @@ require('plugins.format')
 require('plugins.whichkey')
 require('plugins.roslyn')
 require('plugins.colorscheme')
+require('plugins.yazi')

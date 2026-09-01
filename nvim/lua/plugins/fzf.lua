@@ -25,6 +25,18 @@ map('n', '<leader>fd', fzf.diagnostics_workspace, { desc = 'Diagnostics' })
 map('n', '<leader>fs', fzf.lsp_document_symbols, { desc = 'Symbols (this file)' })
 map('n', '<leader>fS', fzf.lsp_live_workspace_symbols, { desc = 'Symbols (workspace)' })
 
+-- Git, for reviewing a changeset rather than a single file.
+--
+-- gitsigns (plugins/git.lua) answers "what changed in this buffer" and owns
+-- the buffer-local <leader>g maps; these answer "what changed across the
+-- repo", which is the more common question when the diff under review was
+-- written by an agent rather than by hand. git_hunks in particular puts every
+-- hunk in the working tree into one fuzzy-searchable list.
+map('n', '<leader>gs', fzf.git_status, { desc = 'Git status (changed files)' })
+map('n', '<leader>gh', fzf.git_hunks, { desc = 'Git hunks (whole changeset)' })
+map('n', '<leader>gc', fzf.git_commits, { desc = 'Git commits (repo)' })
+map('n', '<leader>gf', fzf.git_bcommits, { desc = 'Git commits (this file)' })
+
 -- Search every type in the project.
 --
 -- Distinct from `grt`, which jumps to the type of the symbol already under the

@@ -155,6 +155,19 @@ fi
 alias ll='ls -lh'
 alias la='ls -lah'
 
+# --- Machine-local -----------------------------------------------------------
+#
+# Anything specific to one machine: work aliases, internal registries, extra
+# PATH entries, `eval "$(sometool init zsh)"`. Untracked, because this repo is
+# public -- nothing about an employer belongs in it.
+#
+# Sourced here rather than at the very end so that it can still set the
+# variables the plugins below read at load time, and so that any ZLE widget it
+# defines is wrapped by syntax highlighting rather than missed by it.
+#
+# Use ~/.zshenv.local instead for values that non-interactive shells need too.
+[[ -r "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
+
 # --- Plugins -----------------------------------------------------------------
 
 # A dim suggestion of the rest of the line, from history; right arrow accepts.

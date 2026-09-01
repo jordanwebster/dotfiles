@@ -30,6 +30,66 @@ JetBrains Toolbox path. `PATH` is now `typeset -U`, so the duplicate
 
 The prompt is deliberately left as zsh's default.
 
+## Machine-local overrides
+
+Nothing in zsh loads these automatically — zsh only ever reads `~/.zshenv`,
+`~/.zprofile`, `~/.zshrc` and `~/.zlogin`. Both files below work because the
+tracked config sources them explicitly, guarded on existence, so a machine
+without them simply skips the line.
+
+| File | Sourced from | Applies to | Put here |
+| --- | --- | --- | --- |
+| `~/.zshenv.local` | `zshenv`, last line | **every** zsh, scripts included | env vars non-interactive things need |
+| `~/.zshrc.local` | `zshrc`, before the plugins | interactive shells only | aliases, `PATH`, `eval "$(tool init zsh)"`, functions |
+
+Prefer `~/.zshrc.local`. `.zshenv` is read by every subprocess on the machine,
+so anything put there is inherited by everything; reach for it only when a
+non-interactive shell genuinely needs the value.
+
+`~/.zshrc.local` is sourced *before* the plugins rather than at the very end,
+so that it can set the variables they read at load time and so any ZLE widget
+it defines still gets wrapped by syntax highlighting.
+
+### Using this repo at work
+
+**This repo is public.** No hostname, internal registry, proxy, client name or
+credential belongs in a tracked file. That is what the two `.local` files are
+for — they are the boundary, not just a convenience.
+
+Clone and run `./install.sh --tools` as normal, then put the work-specific
+parts in `~/.zshrc.local`:
+
+```sh
+# ~/.zshrc.local -- untracked
+path=("$HOME/work/bin" $path)
+export NPM_CONFIG_REGISTRY=https://registry.internal.example/
+eval "$(some-internal-tool init zsh)"
+alias deploy='...'
+```
+
+Git identity is the other thing that differs, and it should not be a shell
+variable. Use git's own conditional include, so the right identity is chosen
+by where the repo lives:
+
+```gitconfig
+# ~/.gitconfig
+[user]
+    name = Jordan Webster
+    email = 5429117+jordanwebster@users.noreply.github.com
+
+[includeIf "gitdir:~/work/"]
+    path = ~/.gitconfig-work
+```
+
+```gitconfig
+# ~/.gitconfig-work -- untracked
+[user]
+    email = jordan@employer.example
+```
+
+The same split works for anything else this repo installs: keep the shared
+part tracked, and let an untracked file next to it carry what is local.
+
 ## Secrets
 
 `~/.zshenv.local` is untracked, mode 600, and sourced by `zshenv` if it

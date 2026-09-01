@@ -1,3 +1,24 @@
--- Keymaps are automatically loaded on the VeryLazy event
--- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
--- Add any additional keymaps here
+-- Keymaps: only the ones Nvim does not already provide.
+--
+-- 0.12 maps, out of the box, nearly everything a config like this used to
+-- define by hand:
+--
+--   grn rename        grr references      gO  document symbols   K  hover
+--   gra code action   gri implementation  gc  toggle comment     gx open link
+--   grt type def      grx run codelens    gcc comment line
+--   [d ]d diagnostics [q ]q quickfix      [b ]b buffers   [<Space> ]<Space>
+--   <C-l>  clear search highlight
+--   <C-w>d show diagnostics under the cursor
+--   <C-s>  signature help (insert)        <Tab> jump snippet placeholder
+--   an/in  (visual) grow/shrink treesitter node selection
+--
+-- Those are left alone on purpose. They are what :help documents, which is
+-- worth more than familiarity in a config that gets touched once a year.
+--
+-- Plugin keymaps live next to the plugin that makes them work, in
+-- lua/plugins/; the LSP ones are in config/lsp.lua. Note that <C-l> is left
+-- free rather than being taken for window navigation: <C-w>h/j/k/l already
+-- moves between splits, and clearing search highlight is worth more.
+
+-- Leave terminal mode without the <C-\><C-n> gymnastics.
+vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })

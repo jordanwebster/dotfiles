@@ -1,0 +1,3 @@
+font-size = 16
+# Matches the Neovim colourscheme (built-in catppuccin, which is Mocha).
+theme = Catppuccin Mocha

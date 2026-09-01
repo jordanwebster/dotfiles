@@ -4,7 +4,7 @@ Personal configuration, kept in one place and linked out to where each tool
 expects to find it.
 
 ```
-agents/global-agents.md   ->  ~/.claude/CLAUDE.md, ~/.codex/AGENTS.md
+agents/AGENTS.md          ->  ~/.claude/CLAUDE.md, ~/.codex/AGENTS.md
 zsh/{zshenv,zprofile,zshrc} -> ~/.zshenv, ~/.zprofile, ~/.zshrc
 ghostty/config            ->  ~/.config/ghostty/config
 karabiner/karabiner.edn   ->  ~/.config/karabiner.edn   (then built by goku)

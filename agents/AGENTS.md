@@ -1,6 +1,6 @@
 # Working with me
 
-<!-- Source of truth: ~/source/dotfiles/agents/global-agents.md.
+<!-- Source of truth: ~/source/dotfiles/agents/AGENTS.md.
      Installed by that repo's ./install.sh as ~/.claude/CLAUDE.md and
      ~/.codex/AGENTS.md (symlinks to this file). Edit here, commit here. -->
 

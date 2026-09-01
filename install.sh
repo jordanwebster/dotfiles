@@ -68,8 +68,8 @@ link ghostty/config          "$HOME/.config/ghostty/config"
 link karabiner/karabiner.edn "$HOME/.config/karabiner.edn"
 
 # One file under two names: Claude reads CLAUDE.md, Codex reads AGENTS.md.
-link agents/global-agents.md "$HOME/.claude/CLAUDE.md"
-link agents/global-agents.md "$HOME/.codex/AGENTS.md"
+link agents/AGENTS.md        "$HOME/.claude/CLAUDE.md"
+link agents/AGENTS.md        "$HOME/.codex/AGENTS.md"
 
 # tmux 3.1 and later prefer ~/.config/tmux/tmux.conf, but still read
 # ~/.tmux.conf when it exists — which is where this repo used to install it.

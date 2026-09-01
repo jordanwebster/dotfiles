@@ -15,7 +15,7 @@ tmux/tmux.conf            ->  ~/.config/tmux/tmux.conf
 
 ```sh
 ./install.sh          # symlinks + build the Karabiner config
-./install.sh --lsp    # also install Neovim's language servers and formatters
+./install.sh --tools  # also install the CLI tools, language servers and formatters
 ```
 
 Re-runnable. It creates the symlinks above and then runs `goku` to build the
@@ -43,7 +43,7 @@ control, a hyper key, and a symbol layer on the home row. Written in goku's
 edn format rather than Karabiner's generated JSON. See
 [karabiner/README.md](karabiner/README.md).
 
-**nvim** — editor config. Seven plugins on Nvim 0.12's built-in plugin
+**nvim** — editor config. Eight plugins on Nvim 0.12's built-in plugin
 manager and completion, leaning on core's default keymaps rather than
 redefining them. See [nvim/README.md](nvim/README.md).
 
@@ -55,7 +55,7 @@ used to provide are inlined, so a fresh machine needs no plugin manager.
 ```sh
 brew install goku tmux neovim
 brew install --cask ghostty
-./install.sh --lsp    # language servers, formatters, tree-sitter CLI
+./install.sh --tools  # fzf, ripgrep, fd, tree-sitter, language servers, formatters
 ```
 
 Neovim must be 0.12 or newer.

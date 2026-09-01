@@ -7,23 +7,23 @@
 # alone and reported, so a config someone edited in place is never silently
 # replaced by this checkout's copy.
 #
-# Usage: ./install.sh [--lsp]
-#   --lsp   also install the language servers, formatters and tree-sitter CLI
-#           that nvim/ expects, using each language's own package manager
+# Usage: ./install.sh [--tools]
+#   --tools  also install everything nvim shells out to: the fzf/ripgrep/fd
+#            CLI tools, tree-sitter, language servers and formatters
 
 set -euo pipefail
 
 repo=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
 status=0
-with_lsp=false
+with_tools=false
 
 while [ "$#" -gt 0 ]; do
     case $1 in
-        --lsp) with_lsp=true ;;
+        --tools|--lsp) with_tools=true ;;   # --lsp kept: it is what the first README said
         -h|--help)
-            echo "usage: ./install.sh [--lsp]"
-            echo "  --lsp   also install the language servers, formatters and"
-            echo "          tree-sitter CLI that nvim/ expects"
+            echo "usage: ./install.sh [--tools]"
+            echo "  --tools  also install everything nvim shells out to: fzf,"
+            echo "           ripgrep, fd, tree-sitter, language servers, formatters"
             exit 0
             ;;
         *) echo "unknown option: $1" >&2; exit 2 ;;
@@ -96,18 +96,24 @@ fi
 # installed, and Python tooling wants to be the project's own version, so both
 # belong to their language's package manager rather than to a copy the editor
 # keeps. Everything here is pinned by that manager and visible in git.
-if $with_lsp; then
+if $with_tools; then
     echo
-    echo "Installing language servers and formatters..."
+    echo "Installing the tools nvim expects..."
 
     have() { command -v "$1" >/dev/null 2>&1; }
     note() { printf "  %-26s %s\n" "$1" "$2"; }
 
     if have brew; then
+        # fzf-lua shells out to all four of these. Without fzf in particular
+        # every picker in the editor silently fails, so they are not optional
+        # extras -- they are what makes <leader>f work at all.
+        #
         # tree-sitter-cli is required by nvim-treesitter's `main` branch, which
         # compiles parsers locally. The npm build of it is not supported.
-        brew install --quiet tree-sitter-cli lua-language-server stylua biome 2>&1 \
+        brew install --quiet fzf ripgrep fd bat \
+            tree-sitter-cli lua-language-server stylua biome 2>&1 \
             | grep -vE "^(Warning: .* already installed|==> (Downloading|Pouring|Fetching))" || true
+        note "fzf, ripgrep, fd, bat" "brew (fzf-lua needs these)"
         note "tree-sitter-cli, lua_ls, stylua, biome" "brew"
     else
         note "brew" "MISSING - skipped brew-installed tools"
@@ -117,7 +123,7 @@ if $with_lsp; then
     if have uv; then
         uv tool install --quiet ty >/dev/null 2>&1 || true
         uv tool install --quiet ruff >/dev/null 2>&1 || true
-        note "ty, ruff" "uv"
+        note "ty, ruff" "uv (ruff is both linter and formatter)"
     else
         note "uv" "MISSING - skipped ty and ruff"
         status=1

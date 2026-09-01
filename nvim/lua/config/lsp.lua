@@ -32,19 +32,18 @@ vim.lsp.config('ruff', {
   root_markers = { 'pyproject.toml', 'ruff.toml', '.ruff.toml', '.git' },
 })
 
--- TypeScript and JavaScript, via the native Go port's own server.
+-- TypeScript and JavaScript use nvim-lspconfig's `tsc` definition unchanged.
 --
 -- TypeScript 7 ships only `tsc` in the `typescript` package -- there is no
--- longer a tsserver for typescript-language-server or vtsls to wrap -- so this
--- is the server that tracks current TypeScript rather than TypeScript 5.
-vim.lsp.config('tsgo', {
-  cmd = { 'tsgo', '--lsp', '--stdio' },
-  filetypes = {
-    'javascript', 'javascriptreact', 'javascript.jsx',
-    'typescript', 'typescriptreact', 'typescript.tsx',
-  },
-  root_markers = { 'tsconfig.json', 'jsconfig.json', 'package.json', '.git' },
-})
+-- tsserver left for typescript-language-server or vtsls to wrap -- so this is
+-- the server that tracks current TypeScript rather than TypeScript 5. The
+-- shipped definition does several things a hand-written cmd cannot: it probes
+-- whether tsc or tsgo actually supports --lsp (TypeScript 7+), prefers the
+-- project's own node_modules/.bin over the global one, resolves monorepo
+-- roots from lock files, and declines to attach to Deno projects.
+--
+-- `tsgo` is the same server under nvim-lspconfig's deprecated name; using it
+-- warns on every attach.
 
 -- Lua, which here means editing this config: point it at the Nvim runtime so
 -- that `vim` is not reported as an undefined global.
@@ -61,7 +60,12 @@ vim.lsp.config('lua_ls', {
 -- rust_analyzer and gopls take nvim-lspconfig's definitions as they ship.
 -- C# is not here: roslyn.nvim (plugins/roslyn.lua) has to locate and pick a
 -- solution before the server can attach, which vim.lsp.enable() cannot do.
-vim.lsp.enable({ 'ty', 'ruff', 'tsgo', 'lua_ls', 'rust_analyzer', 'gopls' })
+-- biome lints JS/TS and its family; tsc type-checks them. The same split as
+-- ty and ruff on Python, for the same reason: without biome here, nothing
+-- reports the lint rules it is configured with, even though it reformats on
+-- save. Its shipped definition only attaches where a biome config exists, so
+-- it stays out of the way in projects that do not use it.
+vim.lsp.enable({ 'ty', 'ruff', 'tsc', 'biome', 'lua_ls', 'rust_analyzer', 'gopls' })
 
 -- Built-in completion, driven by the language server. Replaces nvim-cmp and
 -- cmp-nvim-lsp; 'autocomplete' in config/options.lua is the other half.

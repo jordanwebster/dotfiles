@@ -80,7 +80,8 @@ manages separately would be wrong in both cases.
 | --- | --- | --- |
 | Python (types) | `ty` | `uv tool install ty` |
 | Python (lint) | `ruff` | `uv tool install ruff` |
-| TypeScript / JS / React | `tsgo` | `npm i -g @typescript/native-preview` |
+| TS / JS / React (types) | `tsc` | `npm i -g @typescript/native-preview` |
+| TS / JS / React (lint) | `biome` | `brew` |
 | Rust | `rust-analyzer` | `rustup component add` |
 | Go | `gopls` | `go install` |
 | C# | `roslyn-language-server` | `dotnet tool install -g` |
@@ -94,14 +95,19 @@ recorded here rather than lost:
   diagnostics), and it shares a `pyproject.toml` with ruff. It is pre-1.0,
   though: if its inference misjudges real code, `uv tool install basedpyright`
   and change the name in `vim.lsp.enable()`.
-- **`tsgo` over vtsls / typescript-language-server.** TypeScript 7 ships only
+- **`tsc` over vtsls / typescript-language-server.** TypeScript 7 ships only
   `tsc` in the `typescript` package — there is no tsserver left for those two
-  to wrap, so they are pinned to TypeScript 5. `tsgo --lsp --stdio` is the
-  native Go port's own server and tracks current TypeScript.
+  to wrap, so they are pinned to TypeScript 5. nvim-lspconfig's `tsc`
+  definition is used unchanged: it probes which binary actually supports
+  `--lsp`, prefers the project's own over the global one, and declines to
+  attach to Deno projects. (`tsgo` is the same server under a deprecated
+  name.)
 
-Python runs two servers deliberately: `ty` answers for types, `ruff` for lint
-rules and their quick fixes. ruff's hover is disabled so the two do not both
-answer `K`.
+Two languages run two servers deliberately, splitting types from lints:
+`ty` + `ruff` for Python, `tsc` + `biome` for JS/TS. In both cases the
+formatter alone reported nothing, so lint rules were invisible in the editor
+until the linter ran as a server too. ruff's hover is disabled so it and ty
+do not both answer `K`; biome only attaches where a biome config exists.
 
 Formatting is conform.nvim, running each project's own tool (ruff, rustfmt,
 gofmt, biome, stylua) so that saving matches what CI would produce.

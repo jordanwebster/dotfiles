@@ -3,112 +3,66 @@
 ```
 zshenv    -> ~/.zshenv     every zsh, including scripts and subprocesses
 zprofile  -> ~/.zprofile   login shells
-zshrc     -> ~/.zshrc      interactive shells — everything below lives here
+zshrc     -> ~/.zshrc      interactive shells — most of the config lives here
 ```
-
-Startup went from ~676ms to ~51ms per shell, which matters because tmux opens
-a new one for every pane.
-
-## What changed and why
-
-**nvm was 92% of startup.** Sourcing `nvm.sh` costs ~285ms, nearly all of it
-activating the default version. That version lives at a fixed path, so
-`zshrc` puts it on `PATH` directly and defines `nvm` as a stub that loads the
-real thing on first call. `node`, `npm` and `npx` work immediately; `nvm use`
-still works, just a beat slower the first time.
-
-**Completions were never initialised.** Nothing in the old config called
-`compinit` — they worked only because the gcloud SDK's completion script ran
-it as a side effect, which meant they would have vanished silently if gcloud
-were ever removed. It now runs deliberately, with the security audit done
-once a day rather than on every shell.
-
-**Removed:** gcloud (unused since November 2023), `~/.amux/bin` (an empty
-directory), rbenv (ruby 2.7.6, no Gemfile anywhere in `~/source`), and the
-JetBrains Toolbox path. `PATH` is now `typeset -U`, so the duplicate
-`~/.local/bin` cannot come back.
 
 The prompt is deliberately left as zsh's default.
 
-## Machine-local overrides
+## Node
 
-Nothing in zsh loads these automatically — zsh only ever reads `~/.zshenv`,
-`~/.zprofile`, `~/.zshrc` and `~/.zlogin`. Both files below work because the
-tracked config sources them explicitly, guarded on existence, so a machine
-without them simply skips the line.
+`zshrc` puts the default node version's `bin` directory on `PATH` directly and
+defines `nvm` as a stub that sources `nvm.sh` on first call. Sourcing it
+eagerly costs a few hundred milliseconds per shell, nearly all of it spent
+activating a version already at a known path. `node`, `npm` and `npx` are
+available immediately; `nvm use` works as normal, a beat slower the first
+time.
+
+## Completions
+
+`compinit` runs from `zshrc`, with brew's `site-functions` on `fpath`. Its
+security audit of every completion file is done once a day rather than on
+every shell, via the timestamp check on `~/.zcompdump`.
+
+Completion is configured for menu selection, case-insensitive matching and
+colour. The colours come from `LS_COLORS`, which is also what makes `ls`
+readable, so the two are set together.
+
+## Per-machine configuration
+
+Zsh has no `.local` convention — it only ever reads `~/.zshenv`,
+`~/.zprofile`, `~/.zshrc` and `~/.zlogin`. The two files below work because
+the tracked config sources them explicitly, guarded on existence, so a machine
+without them skips the line.
 
 | File | Sourced from | Applies to | Put here |
 | --- | --- | --- | --- |
-| `~/.zshenv.local` | `zshenv`, last line | **every** zsh, scripts included | env vars non-interactive things need |
-| `~/.zshrc.local` | `zshrc`, before the plugins | interactive shells only | aliases, `PATH`, `eval "$(tool init zsh)"`, functions |
+| `~/.zshrc.local` | `zshrc`, before the plugins | interactive shells | aliases, `PATH`, `eval "$(tool init zsh)"`, functions |
+| `~/.zshenv.local` | `zshenv`, last line | **every** zsh, scripts included | values non-interactive shells need |
 
 Prefer `~/.zshrc.local`. `.zshenv` is read by every subprocess on the machine,
-so anything put there is inherited by everything; reach for it only when a
-non-interactive shell genuinely needs the value.
+so anything in it is inherited by everything; reach for it only when something
+non-interactive genuinely needs the value.
 
-`~/.zshrc.local` is sourced *before* the plugins rather than at the very end,
-so that it can set the variables they read at load time and so any ZLE widget
-it defines still gets wrapped by syntax highlighting.
+`~/.zshrc.local` is sourced *before* the plugins, not at the end of the file,
+so that it can set the variables they read at load time and so that any ZLE
+widget it defines is still wrapped by syntax highlighting.
 
-### Using this repo at work
-
-**This repo is public.** No hostname, internal registry, proxy, client name or
-credential belongs in a tracked file. That is what the two `.local` files are
-for — they are the boundary, not just a convenience.
-
-Clone and run `./install.sh --tools` as normal, then put the work-specific
-parts in `~/.zshrc.local`:
-
-```sh
-# ~/.zshrc.local -- untracked
-path=("$HOME/work/bin" $path)
-export NPM_CONFIG_REGISTRY=https://registry.internal.example/
-eval "$(some-internal-tool init zsh)"
-alias deploy='...'
-```
-
-Git identity is the other thing that differs, and it should not be a shell
-variable. Use git's own conditional include, so the right identity is chosen
-by where the repo lives:
-
-```gitconfig
-# ~/.gitconfig
-[user]
-    name = Jordan Webster
-    email = 5429117+jordanwebster@users.noreply.github.com
-
-[includeIf "gitdir:~/work/"]
-    path = ~/.gitconfig-work
-```
-
-```gitconfig
-# ~/.gitconfig-work -- untracked
-[user]
-    email = jordan@employer.example
-```
-
-The same split works for anything else this repo installs: keep the shared
-part tracked, and let an untracked file next to it carry what is local.
+This repo is public, so anything specific to one machine or organisation
+belongs in those two files rather than in a tracked one.
 
 ## Secrets
 
-`~/.zshenv.local` is untracked, mode 600, and sourced by `zshenv` if it
-exists. Machine-local values go there.
-
-Be aware of what that costs: `.zshenv` is read by **every** zsh — scripts,
-subprocesses, anything a program spawns — so everything in it is inherited by
-everything else. That is where these values already were, so this is not a
-regression, but it is not the goal either. Better options, in order:
+Values in `~/.zshenv.local` are inherited by every process the shell spawns,
+which makes it a poor home for credentials. Better options, in order:
 
 1. **macOS keychain**, read on demand, so nothing sits in the environment:
    ```sh
-   security add-generic-password -a "$USER" -s linear-api -w   # store once
-   security find-generic-password -a "$USER" -s linear-api -w  # read
+   security add-generic-password -a "$USER" -s SERVICE -w   # store once
+   security find-generic-password -a "$USER" -s SERVICE -w  # read
    ```
 2. **direnv**, for anything project-scoped: a gitignored `.envrc` per repo, so
    the value exists only inside that directory.
-3. **sops + age** (both already installed) if a secret should travel with this
-   repo, encrypted.
+3. **sops + age**, if a secret should travel with a repo, encrypted.
 
 ## Things worth knowing
 

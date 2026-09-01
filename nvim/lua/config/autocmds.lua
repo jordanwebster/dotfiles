@@ -5,10 +5,9 @@ local group = vim.api.nvim_create_augroup('dotfiles', { clear = true })
 -- Check whether the file changed on disk, and reload it if so.
 --
 -- 'autoread' (config/options.lua) only takes effect when Nvim gets around to
--- checking; these are the moments that mean "you may have been away while
--- something else wrote this file" -- which, with agents editing the repo, is
--- most of the time. Restricted to normal mode in a real file buffer so a
--- reload never lands mid-edit or inside a prompt.
+-- checking; these are the moments that mean "another process may have written
+-- this file while you were elsewhere". Restricted to normal mode in a real
+-- file buffer so a reload never lands mid-edit or inside a prompt.
 vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter', 'CursorHold', 'TermClose', 'TermLeave' }, {
   group = group,
   callback = function()

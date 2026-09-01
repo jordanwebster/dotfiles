@@ -1,7 +1,7 @@
--- fzf-lua: fuzzy finding, and everything Telescope used to do here.
+-- fzf-lua: fuzzy finding, grep, and the LSP and git pickers.
 --
--- Wraps the real fzf binary instead of sorting in Lua, and shells out to fd
--- and ripgrep for file and text search.
+-- Wraps the fzf binary instead of sorting in Lua, and shells out to fd and
+-- ripgrep for file and text search.
 
 local fzf = require('fzf-lua')
 
@@ -12,8 +12,7 @@ fzf.setup({
 
 local map = vim.keymap.set
 
--- The <leader>f prefix, and the four keys under it that already existed, are
--- carried over unchanged from the 2023 Telescope config.
+-- Finding, all under the <leader>f prefix.
 map('n', '<leader>ff', fzf.files, { desc = 'Find files' })
 map('n', '<leader>fg', fzf.live_grep, { desc = 'Grep (live)' })
 map('n', '<leader>fb', fzf.buffers, { desc = 'Buffers' })
@@ -29,9 +28,8 @@ map('n', '<leader>fS', fzf.lsp_live_workspace_symbols, { desc = 'Symbols (worksp
 --
 -- gitsigns (plugins/git.lua) answers "what changed in this buffer" and owns
 -- the buffer-local <leader>g maps; these answer "what changed across the
--- repo", which is the more common question when the diff under review was
--- written by an agent rather than by hand. git_hunks in particular puts every
--- hunk in the working tree into one fuzzy-searchable list.
+-- repo". git_hunks puts every hunk in the working tree into a single
+-- fuzzy-searchable list.
 map('n', '<leader>gs', fzf.git_status, { desc = 'Git status (changed files)' })
 map('n', '<leader>gh', fzf.git_hunks, { desc = 'Git hunks (whole changeset)' })
 map('n', '<leader>gc', fzf.git_commits, { desc = 'Git commits (repo)' })

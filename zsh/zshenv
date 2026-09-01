@@ -4,12 +4,10 @@
 
 . "$HOME/.cargo/env"
 
-# Machine-local values that are not tracked in this repo -- API keys and the
-# like. See zsh/README.md.
+# Machine-local values that are not tracked in this repo. See zsh/README.md.
 #
-# Sourcing secrets from here rather than .zshrc means every process inherits
-# them, which is not ideal; it is done this way only because that is where
-# they already were, and moving them to interactive-only risks breaking a
-# script that quietly depends on one. Prefer fetching from the macOS keychain
-# on demand, or direnv per project, over adding anything new to this file.
+# Anything set here is inherited by every process the shell spawns, which
+# makes it a poor home for credentials: prefer the macOS keychain read on
+# demand, or direnv per project. Use ~/.zshrc.local for anything only
+# interactive shells need.
 [ -f "$HOME/.zshenv.local" ] && . "$HOME/.zshenv.local"

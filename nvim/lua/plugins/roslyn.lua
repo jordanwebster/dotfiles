@@ -4,7 +4,7 @@
 -- to a *solution*, not a directory: something has to find the .sln and choose
 -- between them before a server can start, which vim.lsp.enable() cannot do.
 --
--- Needs `roslyn-language-server` on PATH; ../install.sh --lsp installs it as a
+-- Needs `roslyn-language-server` on PATH; ../install.sh --tools installs it as a
 -- dotnet global tool.
 
 require('roslyn').setup({

@@ -6,7 +6,7 @@
 -- supplying cmd, filetypes and root markers -- so any server enabled below
 -- without a vim.lsp.config() call above is using its definition unchanged.
 --
--- The servers themselves are installed by ../install.sh --lsp, not by a
+-- The servers themselves are installed by ../install.sh --tools, not by a
 -- plugin. See nvim/README.md for why there is no mason here.
 
 -- Python. ty is Astral's type checker, the same people as ruff, so both read
@@ -21,11 +21,10 @@ vim.lsp.config('ty', {
 
 -- Python linting, as a second server alongside ty.
 --
--- ty type-checks; it does not run lint rules, which is the thing ruff is
--- actually famous for. Without this, unused imports, unsorted imports and
--- dead locals go unreported in the editor even though ruff is installed and
--- formatting with it on save. Two servers on one filetype is the intended
--- arrangement here: ty answers for types, ruff for lints and their fixes.
+-- ty type-checks but does not run lint rules. Running ruff only as a
+-- formatter leaves unused imports, unsorted imports and dead locals
+-- unreported, so it runs as a server too. Two servers on one filetype is the
+-- intended arrangement: ty answers for types, ruff for lints and their fixes.
 vim.lsp.config('ruff', {
   cmd = { 'ruff', 'server' },
   filetypes = { 'python' },

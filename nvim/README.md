@@ -15,10 +15,10 @@ nvim-pack-lock.json   plugin versions, committed
 
 ## Why it is this small
 
-Nvim 0.12 absorbed most of what a 2023 config needed plugins for. This one
+Nvim 0.12 provides in core most of what used to need a plugin, and this config
 leans on that rather than working around it:
 
-| Was a plugin | Now built in |
+| Commonly a plugin | In core |
 | --- | --- |
 | lazy.nvim / packer | `vim.pack` |
 | nvim-cmp + 6 source plugins | `'autocomplete'` + `vim.lsp.completion` |
@@ -31,7 +31,7 @@ leans on that rather than working around it:
 ## Keymaps
 
 Nvim's own maps are used wherever one exists, because they are what `:help`
-documents — which matters more than familiarity in a config touched rarely.
+documents.
 
 **Built in — nothing here is configured by this repo:**
 
@@ -67,9 +67,8 @@ gD            go to declaration       <leader>fg  grep (live, ripgrep)
 
 The `<leader>g` maps split by scope: `gp`/`gb`/`gd` are gitsigns, buffer-local,
 answering "what changed *here*"; `gs`/`gh`/`gc`/`gf` are fzf-lua pickers over
-the whole repo. `git_hunks` puts every hunk in the working tree into one
-fuzzy-searchable list, which is the fastest way to review a change someone
-else — or something else — wrote.
+the whole repo. `git_hunks` puts every hunk in the working tree into a single
+fuzzy-searchable list.
 
 `-` shadows the builtin `-` motion (first non-blank of the previous line), the
 same trade vim-vinegar and oil.nvim make for the key that best means "up".
@@ -85,10 +84,9 @@ every type the language server knows about.
 ## Language servers
 
 Installed by `../install.sh --tools`, each from its own language's package
-manager — **not** mason. Two reasons that are specific rather than
-philosophical: `rust-analyzer` has to match the toolchain rustup installed,
-and Python tooling wants to be the project's own version. A copy the editor
-manages separately would be wrong in both cases.
+manager rather than by mason: `rust-analyzer` has to match the toolchain
+rustup installed, and Python tooling should be the project's own version. A
+copy the editor managed separately would be wrong in both cases.
 
 | Language | Server | Installed by |
 | --- | --- | --- |
@@ -101,8 +99,7 @@ manages separately would be wrong in both cases.
 | C# | `roslyn-language-server` | `dotnet tool install -g` |
 | Lua | `lua-language-server` | `brew` |
 
-Two of these were live questions when this was written, so the reasoning is
-recorded here rather than lost:
+Two of the choices are less obvious:
 
 - **`ty` over basedpyright.** Its LSP advertises a superset of basedpyright's
   capabilities (type hierarchy, folding and selection ranges, pull
@@ -118,16 +115,16 @@ recorded here rather than lost:
   name.)
 
 Two languages run two servers deliberately, splitting types from lints:
-`ty` + `ruff` for Python, `tsc` + `biome` for JS/TS. In both cases the
-formatter alone reported nothing, so lint rules were invisible in the editor
-until the linter ran as a server too. ruff's hover is disabled so it and ty
-do not both answer `K`; biome only attaches where a biome config exists.
+`ty` + `ruff` for Python, `tsc` + `biome` for JS/TS. Running a linter only as
+a formatter reports nothing, so each is also enabled as a server. ruff's hover
+is disabled so it and ty do not both answer `K`; biome attaches only where a
+biome config exists.
 
 Formatting is conform.nvim, running each project's own tool (ruff, rustfmt,
 gofmt, biome, stylua) so that saving matches what CI would produce.
 
-`fzf-lua` shells out to `fzf`, `ripgrep`, `fd` and `bat`. Without `fzf` in
-particular every picker fails silently, so `--tools` installs them.
+`fzf-lua` shells out to `fzf`, `ripgrep`, `fd` and `bat`. Without `fzf` every
+picker fails silently, so `--tools` installs all four.
 
 ## Colours
 
@@ -136,7 +133,7 @@ value Ghostty's "Atom One Dark" theme uses. That is One Dark's *darker*
 variant, not the more commonly quoted `#282c34`, so taking the plugin's
 default would leave the editor a few shades off the terminal around it.
 tmux's status line uses palette indices rather than hex, so it follows the
-terminal for free. All three backgrounds are identical, not similar.
+terminal for free. All three backgrounds are identical, not merely similar.
 
 ## Maintenance
 
@@ -150,10 +147,9 @@ terminal for free. All three backgrounds are identical, not similar.
 Nothing is lazy-loaded. At ten plugins the startup cost is not worth the
 indirection.
 
-`plenary.nvim` is present only because yazi.nvim depends on it. lazy.nvim
-installs a plugin's declared dependencies for you; `vim.pack` does not, so
-transitive dependencies are listed explicitly in `init.lua`.
+`plenary.nvim` is present only because yazi.nvim depends on it. `vim.pack`
+does not install a plugin's declared dependencies, so transitive ones are
+listed explicitly in `init.lua`.
 
-There is no diff-review plugin. diffview.nvim is the obvious candidate and
-does work on 0.12 — but it has had no commits since June 2024, and the
-fzf-lua git pickers above cover the same question without adding anything.
+There is no diff-review plugin: the fzf-lua git pickers cover reviewing a
+changeset without adding one.

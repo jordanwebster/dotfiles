@@ -7,13 +7,12 @@
 # --- PATH --------------------------------------------------------------------
 
 # typeset -U keeps these de-duplicated however many times a directory is added.
-# The previous config had ~/.local/bin on PATH twice.
 typeset -U path PATH
 
 # Resolve the default node version without loading nvm. Sourcing nvm.sh costs
-# roughly 285ms on every shell, nearly all of it spent activating the default
-# version -- which lives at a fixed path we can find ourselves. The `default`
-# alias usually points at the `node` alias, which nvm resolves to the newest
+# a few hundred milliseconds on every shell, nearly all of it spent activating
+# a version that lives at a path we can find ourselves. The `default` alias
+# usually points at the `node` alias, which nvm resolves to the newest
 # installed version; a reverse numeric sort does the same job.
 export NVM_DIR="$HOME/.nvm"
 typeset -a _node_dirs
@@ -66,7 +65,7 @@ alias grep='grep --color=auto'
 
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=100000   # kept in memory
-SAVEHIST=100000   # kept on disk; was 1000, about a week's worth
+SAVEHIST=100000   # kept on disk
 
 setopt EXTENDED_HISTORY       # record timestamps, so `history -i` is useful
 setopt SHARE_HISTORY          # tmux panes see each other's commands
@@ -92,9 +91,7 @@ setopt NO_BEEP
 
 # --- Completion --------------------------------------------------------------
 #
-# This must come before anything that calls compdef. Note that until now
-# nothing here initialised completions at all -- they worked only because the
-# gcloud SDK's completion script happened to run compinit as a side effect.
+# Must come before anything that calls compdef.
 
 fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
 
@@ -157,9 +154,9 @@ alias la='ls -lah'
 
 # --- Machine-local -----------------------------------------------------------
 #
-# Anything specific to one machine: work aliases, internal registries, extra
-# PATH entries, `eval "$(sometool init zsh)"`. Untracked, because this repo is
-# public -- nothing about an employer belongs in it.
+# Anything specific to one machine: extra PATH entries, aliases, private
+# registries, `eval "$(sometool init zsh)"`. Untracked, because this repo is
+# public.
 #
 # Sourced here rather than at the very end so that it can still set the
 # variables the plugins below read at load time, and so that any ZLE widget it

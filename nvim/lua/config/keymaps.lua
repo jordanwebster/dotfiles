@@ -1,7 +1,6 @@
 -- Keymaps: only the ones Nvim does not already provide.
 --
--- 0.12 maps, out of the box, nearly everything a config like this used to
--- define by hand:
+-- 0.12 maps nearly all of these out of the box:
 --
 --   grn rename        grr references      gO  document symbols   K  hover
 --   gra code action   gri implementation  gc  toggle comment     gx open link

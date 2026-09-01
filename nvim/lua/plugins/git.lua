@@ -1,8 +1,4 @@
 -- gitsigns: which lines changed, in the sign column.
---
--- Earns a place in a deliberately small plugin set because agents write most
--- of the code in this setup: the gutter is where reviewing someone else's
--- edit starts.
 
 require('gitsigns').setup({
   on_attach = function(bufnr)

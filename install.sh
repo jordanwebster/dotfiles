@@ -71,9 +71,9 @@ link karabiner/karabiner.edn "$HOME/.config/karabiner.edn"
 link agents/AGENTS.md        "$HOME/.claude/CLAUDE.md"
 link agents/AGENTS.md        "$HOME/.codex/AGENTS.md"
 
-# tmux 3.1 and later prefer ~/.config/tmux/tmux.conf, but still read
-# ~/.tmux.conf when it exists — which is where this repo used to install it.
-# Left behind, the old path wins and edits here appear to do nothing.
+# tmux 3.1 and later prefer ~/.config/tmux/tmux.conf but still read
+# ~/.tmux.conf when it exists, and the old path wins. Left behind, it makes
+# edits to the linked config appear to do nothing.
 if [ -L "$HOME/.tmux.conf" ]; then
     rm "$HOME/.tmux.conf"
     echo "REMOVED:  $HOME/.tmux.conf (superseded by ~/.config/tmux/tmux.conf)"

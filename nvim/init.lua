@@ -46,6 +46,7 @@ vim.pack.add({
   'https://github.com/stevearc/conform.nvim',
   'https://github.com/folke/which-key.nvim',
   'https://github.com/seblyng/roslyn.nvim',
+  'https://github.com/olimorris/onedarkpro.nvim',
 }, {
   -- Running install.sh, or starting Nvim after editing this list, is already
   -- the intent to install. A prompt here only blocks the first start on a new
@@ -64,3 +65,4 @@ require('plugins.git')
 require('plugins.format')
 require('plugins.whichkey')
 require('plugins.roslyn')
+require('plugins.colorscheme')

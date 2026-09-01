@@ -1,6 +1,6 @@
 # Neovim
 
-Requires **Nvim 0.12+**. Seven plugins, managed by `vim.pack` (built in).
+Requires **Nvim 0.12+**. Eight plugins, managed by `vim.pack` (built in).
 
 ```
 init.lua              plugin list, leader, treesitter update hook
@@ -70,7 +70,7 @@ every type the language server knows about.
 
 ## Language servers
 
-Installed by `../install.sh --lsp`, each from its own language's package
+Installed by `../install.sh --tools`, each from its own language's package
 manager — **not** mason. Two reasons that are specific rather than
 philosophical: `rust-analyzer` has to match the toolchain rustup installed,
 and Python tooling wants to be the project's own version. A copy the editor
@@ -78,7 +78,8 @@ manages separately would be wrong in both cases.
 
 | Language | Server | Installed by |
 | --- | --- | --- |
-| Python | `ty` | `uv tool install ty` |
+| Python (types) | `ty` | `uv tool install ty` |
+| Python (lint) | `ruff` | `uv tool install ruff` |
 | TypeScript / JS / React | `tsgo` | `npm i -g @typescript/native-preview` |
 | Rust | `rust-analyzer` | `rustup component add` |
 | Go | `gopls` | `go install` |
@@ -98,15 +99,24 @@ recorded here rather than lost:
   to wrap, so they are pinned to TypeScript 5. `tsgo --lsp --stdio` is the
   native Go port's own server and tracks current TypeScript.
 
+Python runs two servers deliberately: `ty` answers for types, `ruff` for lint
+rules and their quick fixes. ruff's hover is disabled so the two do not both
+answer `K`.
+
 Formatting is conform.nvim, running each project's own tool (ruff, rustfmt,
 gofmt, biome, stylua) so that saving matches what CI would produce.
 
+`fzf-lua` shells out to `fzf`, `ripgrep`, `fd` and `bat`. Without `fzf` in
+particular every picker fails silently, so `--tools` installs them.
+
 ## Colours
 
-`catppuccin` ships with Nvim 0.12, so the colourscheme costs no plugin.
-Ghostty is set to the matching Catppuccin Mocha, and tmux's status line uses
-palette indices rather than hex — so editor, multiplexer and terminal agree
-with nothing to keep in step.
+One Dark, via `onedarkpro.nvim`, pinned to background `#21252b` — the exact
+value Ghostty's "Atom One Dark" theme uses. That is One Dark's *darker*
+variant, not the more commonly quoted `#282c34`, so taking the plugin's
+default would leave the editor a few shades off the terminal around it.
+tmux's status line uses palette indices rather than hex, so it follows the
+terminal for free. All three backgrounds are identical, not similar.
 
 ## Maintenance
 
@@ -117,5 +127,5 @@ with nothing to keep in step.
 :restart                  reload after updating
 ```
 
-Nothing is lazy-loaded. At seven plugins the startup cost is not worth the
+Nothing is lazy-loaded. At eight plugins the startup cost is not worth the
 indirection.

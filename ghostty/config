@@ -1,3 +1,6 @@
 font-size = 16
-# Matches the Neovim colourscheme (built-in catppuccin, which is Mocha).
-theme = Catppuccin Mocha
+
+# Matches the Neovim colourscheme (onedarkpro, pinned to this theme's
+# background of #21252b so the two backgrounds are identical rather than
+# merely similar).
+theme = Atom One Dark

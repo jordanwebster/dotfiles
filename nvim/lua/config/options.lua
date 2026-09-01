@@ -62,11 +62,3 @@ o.confirm = true
 o.mouse = 'a'
 o.termguicolors = true
 
--- Colourscheme.
---
--- catppuccin ships with Nvim 0.12, so this costs no plugin. Ghostty is set to
--- the matching Catppuccin Mocha, and tmux's status line is written in palette
--- indices rather than hex, so all three agree without anything to keep in
--- sync. The upstream catppuccin/nvim plugin has richer per-plugin styling if
--- this ever looks thin.
-vim.cmd.colorscheme('catppuccin')

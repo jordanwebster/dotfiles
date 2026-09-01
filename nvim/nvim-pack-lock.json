@@ -21,6 +21,10 @@
       "src": "https://github.com/nvim-treesitter/nvim-treesitter",
       "version": "'main'"
     },
+    "onedarkpro.nvim": {
+      "rev": "ef009ae60769935a4eced9b3d545ae6013d3d271",
+      "src": "https://github.com/olimorris/onedarkpro.nvim"
+    },
     "roslyn.nvim": {
       "rev": "de9a98d61ed3fd01b5016eea5fe9e32f1a4c7cfb",
       "src": "https://github.com/seblyng/roslyn.nvim"

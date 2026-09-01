@@ -5,6 +5,7 @@ expects to find it.
 
 ```
 agents/global-agents.md   ->  ~/.claude/CLAUDE.md, ~/.codex/AGENTS.md
+zsh/{zshenv,zprofile,zshrc} -> ~/.zshenv, ~/.zprofile, ~/.zshrc
 ghostty/config            ->  ~/.config/ghostty/config
 karabiner/karabiner.edn   ->  ~/.config/karabiner.edn   (then built by goku)
 nvim/                     ->  ~/.config/nvim
@@ -46,6 +47,11 @@ edn format rather than Karabiner's generated JSON. See
 **nvim** — editor config. Ten plugins on Nvim 0.12's built-in plugin
 manager and completion, leaning on core's default keymaps rather than
 redefining them. See [nvim/README.md](nvim/README.md).
+
+**zsh** — shell config. ~51ms startup (was ~676ms, almost all of it nvm),
+completions initialised deliberately rather than by accident, fzf history
+search, autosuggestions and syntax highlighting. Secrets live in an untracked
+`~/.zshenv.local`. See [zsh/README.md](zsh/README.md).
 
 **tmux** — terminal multiplexer config. Plugin-free: the settings tmux-sensible
 used to provide are inlined, so a fresh machine needs no plugin manager.

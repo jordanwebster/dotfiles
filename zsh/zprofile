@@ -1,0 +1,4 @@
+# ~/.zprofile -- login shells, sourced before .zshrc.
+
+# Homebrew's own environment: PATH, MANPATH, INFOPATH and the HOMEBREW_* vars.
+eval "$(/opt/homebrew/bin/brew shellenv)"

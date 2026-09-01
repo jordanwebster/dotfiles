@@ -1,0 +1,15 @@
+# ~/.zshenv -- read by EVERY zsh: interactive shells, scripts, and any
+# subprocess a program spawns. Keep it to things that genuinely must exist
+# everywhere, because everything here is inherited by everything else.
+
+. "$HOME/.cargo/env"
+
+# Machine-local values that are not tracked in this repo -- API keys and the
+# like. See zsh/README.md.
+#
+# Sourcing secrets from here rather than .zshrc means every process inherits
+# them, which is not ideal; it is done this way only because that is where
+# they already were, and moving them to interactive-only risks breaking a
+# script that quietly depends on one. Prefer fetching from the macOS keychain
+# on demand, or direnv per project, over adding anything new to this file.
+[ -f "$HOME/.zshenv.local" ] && . "$HOME/.zshenv.local"

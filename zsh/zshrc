@@ -1,0 +1,167 @@
+# ~/.zshrc -- interactive shells only.
+#
+# Ordering matters in two places, both marked below: compinit must run before
+# anything that registers completions, and zsh-syntax-highlighting must be
+# sourced last.
+
+# --- PATH --------------------------------------------------------------------
+
+# typeset -U keeps these de-duplicated however many times a directory is added.
+# The previous config had ~/.local/bin on PATH twice.
+typeset -U path PATH
+
+# Resolve the default node version without loading nvm. Sourcing nvm.sh costs
+# roughly 285ms on every shell, nearly all of it spent activating the default
+# version -- which lives at a fixed path we can find ourselves. The `default`
+# alias usually points at the `node` alias, which nvm resolves to the newest
+# installed version; a reverse numeric sort does the same job.
+export NVM_DIR="$HOME/.nvm"
+typeset -a _node_dirs
+_node_dirs=( $NVM_DIR/versions/node/v*(N/) )
+_node_dirs=( ${(On)_node_dirs} )
+
+path=(
+  # spend's shims deliberately shadow the real binaries, so they come first.
+  "$HOME/.local/share/spend/shims"
+  "$HOME/.local/bin"
+  "$HOME/go/bin"
+  "$HOME/.aspire/bin"
+  ${_node_dirs[1]:+${_node_dirs[1]}/bin}
+  $path
+)
+unset _node_dirs
+
+# node, npm and npx are on PATH above; nvm itself loads only when called.
+nvm() {
+  unfunction nvm
+  source "$NVM_DIR/nvm.sh"
+  nvm "$@"
+}
+
+# --- Environment -------------------------------------------------------------
+
+export EDITOR=nvim
+export VISUAL=nvim
+
+# -R so that colour escapes from git, bat and friends survive the pager.
+export LESS='-R'
+
+# man pages through bat: syntax highlighting and a readable width.
+export MANPAGER="sh -c 'col -bx | bat --language man --plain'"
+
+# --- Colour ------------------------------------------------------------------
+
+# BSD ls (the macOS default) colours only when this is set.
+export CLICOLOR=1
+
+# LS_COLORS drives GNU tools and, more usefully here, the colours in zsh's
+# completion menu. gdircolors is coreutils' dircolors, installed by brew.
+if (( $+commands[gdircolors] )); then
+  eval "$(gdircolors -b)"
+fi
+
+alias grep='grep --color=auto'
+
+# --- History -----------------------------------------------------------------
+
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=100000   # kept in memory
+SAVEHIST=100000   # kept on disk; was 1000, about a week's worth
+
+setopt EXTENDED_HISTORY       # record timestamps, so `history -i` is useful
+setopt SHARE_HISTORY          # tmux panes see each other's commands
+setopt HIST_IGNORE_ALL_DUPS   # keep only the most recent copy of a command
+setopt HIST_IGNORE_SPACE      # a leading space keeps a command out of history
+setopt HIST_REDUCE_BLANKS
+setopt HIST_VERIFY            # !! expands onto the line instead of running
+
+# --- Options -----------------------------------------------------------------
+
+setopt AUTO_CD                # `dotfiles` on its own means `cd dotfiles`
+setopt AUTO_PUSHD             # every cd pushes; `dirs -v` then `cd -2`
+setopt PUSHD_IGNORE_DUPS
+setopt PUSHD_SILENT
+setopt EXTENDED_GLOB          # ^, ~ and # as glob operators
+setopt INTERACTIVE_COMMENTS   # allow # comments at the prompt
+setopt COMPLETE_IN_WORD       # complete from where the cursor is, not the end
+setopt ALWAYS_TO_END
+setopt NO_BEEP
+
+# GLOB_DOTS is deliberately left off: having * match dotfiles makes `rm *` far
+# more dangerous than it looks.
+
+# --- Completion --------------------------------------------------------------
+#
+# This must come before anything that calls compdef. Note that until now
+# nothing here initialised completions at all -- they worked only because the
+# gcloud SDK's completion script happened to run compinit as a side effect.
+
+fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
+
+autoload -Uz compinit
+# compinit audits every completion file for insecure permissions, which costs
+# ~25ms. Do the full check once a day and trust the cache in between.
+_zcompdump="$HOME/.zcompdump"
+if [[ -n $_zcompdump(#qN.mh+24) ]]; then
+  compinit -d "$_zcompdump"
+else
+  compinit -C -d "$_zcompdump"
+fi
+unset _zcompdump
+
+zstyle ':completion:*' menu select                      # arrow-navigable menu
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'  # case-insensitive
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}   # colour by file type
+zstyle ':completion:*' group-name ''                    # group by category
+zstyle ':completion:*:descriptions' format '%F{yellow}%B%d%b%f'
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path "$HOME/.cache/zsh/compcache"
+[[ -d "$HOME/.cache/zsh" ]] || mkdir -p "$HOME/.cache/zsh"
+
+# --- Key bindings ------------------------------------------------------------
+
+bindkey -e   # emacs bindings: Ctrl-A/E, Ctrl-W, Ctrl-U
+
+# Up and Down search history for what has already been typed, rather than
+# stepping blindly through every command.
+autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+bindkey '^[[A' up-line-or-beginning-search
+bindkey '^[[B' down-line-or-beginning-search
+
+# Ctrl-X Ctrl-E opens the line being typed in $EDITOR -- for the long ones.
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey '^X^E' edit-command-line
+
+# --- Tools -------------------------------------------------------------------
+
+# Ctrl-R fuzzy history, Ctrl-T insert a file path, Alt-C cd into a directory.
+#
+# Guarded on a terminal: fzf's integration snapshots the shell option array and
+# restores it, which fails on `zle` when there is no tty. That combination --
+# interactive with no terminal -- is exactly what `zsh -ic '...'` gives, and
+# some tools invoke shells that way, where stray stderr can break parsing.
+if [[ -t 0 ]] && (( $+commands[fzf] )); then
+  source <(fzf --zsh)
+fi
+
+# `z foo` jumps to the directory named foo you visit most.
+(( $+commands[zoxide] )) && eval "$(zoxide init zsh)"
+
+# --- Aliases -----------------------------------------------------------------
+
+alias ll='ls -lh'
+alias la='ls -lah'
+
+# --- Plugins -----------------------------------------------------------------
+
+# A dim suggestion of the rest of the line, from history; right arrow accepts.
+[[ -r /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]] &&
+  source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+# Must be sourced LAST: it wraps the line editor, and any widget registered
+# after it will not be highlighted.
+[[ -r /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] &&
+  source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

@@ -58,6 +58,10 @@ link() {
     echo "LINKED:   $target -> $source"
 }
 
+link zsh/zshenv              "$HOME/.zshenv"
+link zsh/zprofile            "$HOME/.zprofile"
+link zsh/zshrc               "$HOME/.zshrc"
+
 link tmux/tmux.conf          "$HOME/.config/tmux/tmux.conf"
 link nvim                    "$HOME/.config/nvim"
 link ghostty/config          "$HOME/.config/ghostty/config"
@@ -110,10 +114,12 @@ if $with_tools; then
         #
         # tree-sitter-cli is required by nvim-treesitter's `main` branch, which
         # compiles parsers locally. The npm build of it is not supported.
-        brew install --quiet fzf ripgrep fd bat \
+        brew install --quiet fzf ripgrep fd bat coreutils \
+            zsh-autosuggestions zsh-syntax-highlighting zoxide \
             tree-sitter-cli lua-language-server stylua biome 2>&1 \
             | grep -vE "^(Warning: .* already installed|==> (Downloading|Pouring|Fetching))" || true
-        note "fzf, ripgrep, fd, bat" "brew (fzf-lua needs these)"
+        note "fzf, ripgrep, fd, bat, coreutils" "brew (nvim + zsh need these)"
+        note "zsh-autosuggestions, -syntax-highlighting, zoxide" "brew"
         note "tree-sitter-cli, lua_ls, stylua, biome" "brew"
     else
         note "brew" "MISSING - skipped brew-installed tools"

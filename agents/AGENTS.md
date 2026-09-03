@@ -20,6 +20,37 @@
   what you did instead`. Friction only — no praise, no summaries, no
   essays. The log is data for later skill revisions, not a message to me.
 
+## Self-contained communication
+
+Write for a reader who has not seen the plans, specifications, task trackers,
+agent transcripts, or other process artifacts behind the work.
+
+References are optional navigation, not vocabulary or proof of thoroughness:
+
+- Explain the behavior, decision, evidence, or constraint in plain domain
+  language. Do not make an opaque identifier carry the explanation.
+- Default to omitting references. Include one only when the reader is likely to
+  use it — for example, to inspect or review an artifact, take an action,
+  continue tracked work, resolve an ambiguity, or verify a consequential claim.
+- Link tasks, issues, pull requests, commits, specifications, and decision
+  records when that link provides such a concrete next step. Do not cite routine
+  background or preserve provenance merely because it is available.
+- Attach a useful reference to the plain-language thing it identifies:
+  `the cache-isolation fix ([ENG-421](...))`, not `ENG-421`.
+- Prefer one reference that locates the relevant work over a trail of references
+  documenting every intermediate decision.
+- A reference may stand alone only when identifying the artifact is itself the
+  point — for example, “Which PR contains the fix?”
+- Do not use requirement IDs, plan-item labels, task numbers, issue keys,
+  decision labels, session shorthand, agent names, or process vocabulary as
+  unexplained subjects in prose.
+- Do not narrate a succession of plans or specifications when the reader needs
+  the resulting understanding. Explain what was tried, what happened, and why
+  the design changed.
+- Before sending reader-facing prose, remove each reference mentally. If the
+  explanation stops making sense, rewrite it. If removing the reference loses
+  no useful navigation or action, omit it.
+
 ## Channels
 
 Every writable surface has one audience. Name the reader before you
